@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 export const eachDay = data => {
   let allDays = [];
   let currentDay = new Date(data[0].dt_txt.split(' ')[0]);
+
   for (let i = 0; i < 5; i++) {
     let singleDay = data.filter(item =>
       isSameDay(new Date(item.dt_txt.split(' ')[0]), currentDay)

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
-import { Header } from './components/Header';
+import Header from './components/Header';
 import SearchForm from './components/SearchForm';
-import ForecastContainer from './components/Forecast/ForecastContainer';
+import ForecastContainer from './components/ForecastContainer';
 import WeatherService from './services/weather-service';
-import ForecastCurrent from './components/Forecast/ForecastCurrent';
-import ForecastHourly from './components/Forecast/ForecastHourly';
+import ForecastCurrent from './components/ForecastCurrent';
+import ForecastHourly from './components/ForecastHourly';
+import Container from 'react-bootstrap/Container';
 
 import './App.css';
 
@@ -14,15 +15,12 @@ class App extends Component {
 
   state = {
     location: 'lviv',
-    current: {},
-    items: [],
-    icon: null,
-    temperature: null,
-    description: null
+    current: null,
+    items: null
   };
 
   componentDidMount() {
-    const { getForecast, getCurrent, getCurrentTest } = this.service;
+    const { getForecast, getCurrent } = this.service;
 
     getForecast('London,us').then(data => this.setState({ items: data.list }));
 
@@ -33,36 +31,30 @@ class App extends Component {
     console.log('Error', err);
   };
 
-  onSearchLocation = e => {
-    e.preventDefault();
+  onSearchLocation = value => {
     const { getForecast, getCurrent } = this.service;
-    const { location } = this.state;
 
-    getForecast(location).then(({ list }) => this.setState({ items: list }));
-    getCurrent(location).then(current => this.setState({ current }));
-  };
-
-  handleChange = ({ target }) => {
-    this.setState({ location: target.value });
+    getForecast(value).then(({ list }) => this.setState({ items: list }));
+    getCurrent(value).then(current => this.setState({ current }));
   };
 
   render() {
     const { current, items } = this.state;
+
     return (
       <div className='App'>
-        <div className='container'>
+        <Container>
           <Header />
           <SearchForm
             onSubmit={this.onSearchLocation}
             onChange={this.handleChange}
           />
-        </div>
-        <div className='container-fluid'>
-          <ForecastContainer
-            current={<ForecastCurrent data={current} />}
-            hourly={<ForecastHourly data={items} />}
-          />
-        </div>
+        </Container>
+
+        <ForecastContainer
+          current={<ForecastCurrent data={current} />}
+          hourly={<ForecastHourly data={items} />}
+        />
       </div>
     );
   }

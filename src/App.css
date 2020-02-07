@@ -1,1 +1,6 @@
-
+.card-img {
+  min-width: 99px;
+  max-width: 99px;
+  min-height: 99px;
+  max-height: 99px;
+}
