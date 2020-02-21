@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-
-import Header from './components/Header';
-import SearchForm from './components/SearchForm';
-import ForecastContainer from './components/ForecastContainer';
-import WeatherService from './services/weather-service';
-import ForecastCurrent from './components/ForecastCurrent';
-import ForecastHourly from './components/ForecastHourly';
 import Container from 'react-bootstrap/Container';
+
+import Header from './components/header';
+import SearchForm from './components/search-form';
+import ForecastContainer from './components/forecast-container';
+import WeatherService from './services/weather-service';
+import ForecastCurrent from './components/forecast-current';
+import ForecastHourly from './components/forecast-hourly';
 
 import './App.css';
 
@@ -14,32 +14,49 @@ class App extends Component {
   service = new WeatherService();
 
   state = {
-    location: 'lviv',
+    location: '',
     current: null,
-    items: null
+    items: null,
+    currentLoading: false,
+    forecastLoading: false
   };
 
   componentDidMount() {
     const { getForecast, getCurrent } = this.service;
 
-    getForecast('London,us').then(data => this.setState({ items: data.list }));
+    this.setState({ currentLoading: true, forecastLoading: true });
 
-    getCurrent('lviv,ua').then(current => this.setState({ current }));
+    getCurrent('London,us')
+      .then(current => this.setState({ current, currentLoading: false }))
+      .catch(this.onError);
+
+    getForecast('London,us')
+      .then(data => this.setState({ items: data.list, forecastLoading: false }))
+      .catch(this.onError);
   }
 
-  handleError = err => {
+  onError = err => {
     console.log('Error', err);
   };
 
   onSearchLocation = value => {
     const { getForecast, getCurrent } = this.service;
 
-    getForecast(value).then(({ list }) => this.setState({ items: list }));
-    getCurrent(value).then(current => this.setState({ current }));
+    this.setState({ currentLoading: true, forecastLoading: true });
+
+    getCurrent(value)
+      .then(current => this.setState({ current, currentLoading: false }))
+      .catch(this.onError);
+
+    getForecast(value)
+      .then(({ list }) =>
+        this.setState({ items: list, forecastLoading: false })
+      )
+      .catch(this.onError);
   };
 
   render() {
-    const { current, items } = this.state;
+    const { current, items, currentLoading, forecastLoading } = this.state;
 
     return (
       <div className='App'>
@@ -52,8 +69,8 @@ class App extends Component {
         </Container>
 
         <ForecastContainer
-          current={<ForecastCurrent data={current} />}
-          hourly={<ForecastHourly data={items} />}
+          current={<ForecastCurrent data={current} loading={currentLoading} />}
+          hourly={<ForecastHourly data={items} loading={forecastLoading} />}
         />
       </div>
     );

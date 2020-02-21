@@ -33,7 +33,7 @@ class SearchForm extends React.Component {
             type='search'
             onChange={this.handleChange}
             value={location}
-            placeholder='enter something..'
+            placeholder='get forecast..'
           />
           <InputGroup.Append>
             <Button variant='danger' type='submit'>

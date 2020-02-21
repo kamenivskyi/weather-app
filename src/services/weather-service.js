@@ -7,9 +7,10 @@ class WeatherService {
 
   getResource = async url => {
     const res = await axios
-      .get(
-        `${this._apiBase}${url}&mode=json&units=metric&appid=${this._apiKey}`
-      )
+      .create({
+        baseURL: this._apiBase
+      })
+      .get(`${url}&mode=json&units=metric&appid=${this._apiKey}`)
       .catch(err => console.log('Error: ', err));
     return res.data;
   };
