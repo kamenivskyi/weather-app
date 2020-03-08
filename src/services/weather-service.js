@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { convertToTime } from '../helpers';
+
 class WeatherService {
   _apiBase = 'https://api.openweathermap.org/data/2.5';
   _apiKey = 'e6bc569497f75fdbd9c1b2e6a2537e83';
@@ -45,32 +47,13 @@ class WeatherService {
       windSpeed: obj.wind.speed,
       windDeg: obj.wind.deg,
       timezone: obj.timezone,
-      sunrise: this._convertToTime(obj.sys.sunrise),
-      sunset: this._convertToTime(obj.sys.sunset),
+      sunrise: convertToTime(obj.sys.sunrise),
+      sunset: convertToTime(obj.sys.sunset),
       temp: Math.round(obj.main.temp),
       tempMin: Math.round(obj.main.temp_min),
       tempMax: Math.round(obj.main.temp_max),
       iconUrl: this._getIconUrl(obj.weather[0].icon)
     };
-  };
-  _simplifyObjForecast = obj => {
-    return {};
-  };
-
-  _convertToTime = value => {
-    const date = new Date(value * 1000);
-    const hours = this._addZero(date.getHours());
-    const minutes = this._addZero(date.getMinutes());
-    const time = `${hours}:${minutes}`;
-
-    return time;
-  };
-
-  _addZero = value => {
-    if (value.toString().length < 2) {
-      value = '0' + value;
-    }
-    return value;
   };
 
   _getIconUrl = iconCode => {

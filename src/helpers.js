@@ -16,6 +16,22 @@ export const eachDay = data => {
   return allDays;
 };
 
+export const convertToTime = value => {
+  const date = new Date(value * 1000);
+  const hours = _addZero(date.getHours());
+  const minutes = _addZero(date.getMinutes());
+  const time = `${hours}:${minutes}`;
+
+  return time;
+};
+
+const _addZero = value => {
+  if (value.toString().length < 2) {
+    value = '0' + value;
+  }
+  return value;
+};
+
 export const formatDate = date => format(new Date(date), 'PPP');
 
 export const getHours = date => {

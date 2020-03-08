@@ -18,7 +18,8 @@ class App extends Component {
     current: null,
     items: null,
     currentLoading: false,
-    forecastLoading: false
+    forecastLoading: false,
+    error: false
   };
 
   componentDidMount() {
@@ -26,18 +27,16 @@ class App extends Component {
 
     this.setState({ currentLoading: true, forecastLoading: true });
 
-    getCurrent('London,us')
+    getCurrent('Lviv')
       .then(current => this.setState({ current, currentLoading: false }))
       .catch(this.onError);
 
-    getForecast('London,us')
+    getForecast('Lviv')
       .then(data => this.setState({ items: data.list, forecastLoading: false }))
       .catch(this.onError);
   }
 
-  onError = err => {
-    console.log('Error', err);
-  };
+  onError = err => this.setState({ error: true, loading: true });
 
   onSearchLocation = value => {
     const { getForecast, getCurrent } = this.service;
@@ -56,7 +55,21 @@ class App extends Component {
   };
 
   render() {
-    const { current, items, currentLoading, forecastLoading } = this.state;
+    const {
+      current,
+      items,
+      currentLoading,
+      forecastLoading,
+      error
+    } = this.state;
+
+    if (error) {
+      return (
+        <h4 className='text-primary text-center my-4'>
+          Ooops! something went wrong!
+        </h4>
+      );
+    }
 
     return (
       <div className='App'>
