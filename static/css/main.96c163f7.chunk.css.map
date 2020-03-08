@@ -1,0 +1,1 @@
+{"version":3,"sources":["App.css"],"names":[],"mappings":"AAAA,UACE,cAAe,CACf,cAAe,CACf,eAAgB,CAChB,eACF","file":"main.96c163f7.chunk.css","sourcesContent":[".card-img {\n  min-width: 99px;\n  max-width: 99px;\n  min-height: 99px;\n  max-height: 99px;\n}\n"]}
